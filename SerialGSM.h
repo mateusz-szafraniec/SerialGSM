@@ -1,43 +1,98 @@
 #ifndef _SerialGSM_H
 #define _SerialGSM_H
 #include "Arduino.h"
+#include <SIM800L.h>
 #include <SoftwareSerial.h>
+
+#define BUFFER_SIZE 255
 
 #define SERIALTIMEOUT 2000
 #define PHONESIZE 13
 #define MAXMSGLEN 160
 #define BOOTTIME 25
 
+#define PWR_OFF_ON_DELAY 3000L
+
+#define AT_TO      500L
+#define CPBR_TO     1000L
+#define CMGR_TO     300L
+#define CMGD_TO     15000L
+#define CMGDA_TO    10000L
+#define CSQ_TO      30000L
+#define CSCLK_TO    2000L
+#define CPOWD_TO    10000L
+#define CMEE_TO     10000L
+#define IPR_TO      10000L
+#define CMGF_TO     10000L
+#define CNMI_TO     10000L
+#define CREG_TO     30000L
+#define CPMS_TO     10000L
+#define CPIN_TO     10000L
+#define CMGS1_TO    2000L
+#define CMGS2_TO    20000L
+#define UDPREPLY_TO   5000L
+
 class SerialGSM : public SoftwareSerial {
 public:
-  SerialGSM(int rxpin,int txpin);
+  SerialGSM(byte rxpin,byte txpin, byte pwrkey, byte power);
+  char buffer[BUFFER_SIZE]; // buffer array for data recieve over serial port
+  byte count;     // counter for buffer array
+  void sendATCommand(char * command);
   void FwdSMS2Serial();
-  void SendSMS();
-  void SendSMS(char * cellnumber,char * outmsg);
-  void DeleteAllSMS();
-  void Reset();
-  void answer();
-  void hungup();
-  void dial(char * pnumber);
-  void EndSMS();
-  void StartSMS();
-  int ReadLine();
-  int ReceiveSMS();
+  byte echoOFF();
+  byte echoON();
+  byte clipON();
+  byte DeleteAllSMS();
+  byte Reset();
+  byte dial(char * number);
+  byte answer();
+  byte hungup();
+
+  //int ReadLine();
+  //int ReceiveSMS();
   void Verbose(boolean var1);
   boolean Verbose();
   void Sender(char * var1);
   char * Sender();
-  void Rcpt(char * var1);
-  char * Rcpt();
-  void Message(char * var1);
   char * Message();
-  void Boot();
+
+  void switchGPRS_ON();
+  void switchGPRS_OFF_SW();
+  void switchGPRS_OFF_HW();
+  boolean isGPRSReady();
+  boolean isNetworkAvailable();
+  byte sendSMS(char * number, char * message);
+  byte readSMSfromSIM(byte position);
+  byte readSMS();
+  
+  void clearBufferArray();
+  byte readDataToBuffer();
+  void printBufferContent();
+  void printSerialContent();
+  byte confirmAtCommand(char *searchString, unsigned long timeOut);
+  byte findInBuffer(char* text);
+  bool checkNetworkRegistration();
+  uint8_t signalQuality();
+  boolean selectSIMPhoneBook();
+  char * readPhoneNumber(uint8_t position);
+  boolean deletePhoneNumber(uint8_t position);
+  boolean storePhoneNumber(uint8_t position, char * phoneNumber, char * name);
+  
+  void GPRSWriteByte(char c);
+  bool isGPRSDataAvailable();
+  
+  void removeChar(char *str, char garbage);
+
+  bool getPSUTTZ();
+  byte parseCMTI();
 
   boolean verbose;
   char sendernumber[PHONESIZE + 1];
-  char rcpt[PHONESIZE + 1];
-  char outmessage[160];
   char inmessage[160];
+  byte DST;
+  char *psuttz;
+  byte pwrkey;
+  byte power;
   
 protected:
   unsigned long lastrec;

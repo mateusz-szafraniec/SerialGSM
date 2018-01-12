@@ -1,13 +1,14 @@
 #include <SerialGSM.h>
 #include <SoftwareSerial.h>
-SerialGSM cell(2,3);
+SerialGSM cell(8,9);
 
 boolean sendonce=true;
 void setup(){  
-  Serial.begin(9600);
-  cell.begin(9600);
+  Serial.begin(57600);
+  cell.begin(57600);
   cell.Verbose(true);
-  cell.Boot();
+  //cell.switchGPRS_ON();
+  cell.echoOFF;
   cell.DeleteAllSMS();
   cell.FwdSMS2Serial();
  }
