@@ -413,6 +413,48 @@ byte SerialGSM::confirmAtCommand(char* searchString, unsigned long timeOut)
   return 3;
 }
 
+/*************************************************************
+  Procedure to search data returned from AT commands.  All
+  data up to and including searchString is stored in a global
+  array to be used if needed.
+  ARGUMENTS
+  searchString  pointer to string to be searched
+  timeOut     timeout in milliseconds
+
+  RETURN:
+  0       searchString found successfully
+  1       ERROR string encountered, potential problem
+  2       Buffer full, searchString not found
+  3       Timeout reached before searchString found
+**************************************************************/
+byte SerialGSM::waitForResult(char* searchString, unsigned long timeOut)
+{
+  unsigned long tOut = millis();
+  while ((millis() - tOut) <= timeOut)
+  {
+    if (this->available())
+    {
+      buffer[count] = this->read();
+      count++;
+      buffer[count] = '\0';
+      if (strstr(buffer, searchString) != NULL) {
+        if (verbose) Serial.println(F("OK"));
+        return 0;
+        }
+      if (strstr(buffer, "ERROR") != NULL) {
+        if (verbose) Serial.println(F("ERROR"));
+        return 1;
+        }
+      if (count >= (BUFFER_SIZE - 1)) {
+        if (verbose) Serial.println(F("ERROR (not found)"));
+        return 2;
+        }
+    }
+  }
+  if (verbose) Serial.println(F("ERROR (timeout)"));
+  return 3;
+}
+
 byte SerialGSM::findInBuffer(char* text) 
 {
   if (strcasestr(buffer, text)) {
@@ -420,6 +462,23 @@ byte SerialGSM::findInBuffer(char* text)
   } else {
     return false;
   }
+}
+
+byte SerialGSM::waitForNetwork(unsigned long timeOut)
+{
+  unsigned long tOut = millis();
+  byte result;
+  while ((millis() - tOut) <= timeOut)
+  {
+	result = checkNetworkRegistration();
+	if (result == 0) {
+		if (verbose) Serial.println(F("OK"));
+        return 0;
+	}
+	delay (500);
+  }
+  if (verbose) Serial.println(F("ERROR (timeout)"));
+  return 1;
 }
 
 /*************************************************************
@@ -507,6 +566,11 @@ boolean SerialGSM::storePhoneNumber(uint8_t position, char * phoneNumber, char *
 void SerialGSM::GPRSWriteByte(char c)
 {
   this->write(c);
+}
+
+byte SerialGSM::GPRSReadByte()
+{
+  return this->read();
 }
 
 bool SerialGSM::isGPRSDataAvailable()

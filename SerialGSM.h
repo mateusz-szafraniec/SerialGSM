@@ -70,8 +70,10 @@ public:
   void printBufferContent();
   void printSerialContent();
   byte confirmAtCommand(char* searchString, unsigned long timeOut);
+  byte waitForResult(char* searchString, unsigned long timeOut);
   byte findInBuffer(char* text);
   bool checkNetworkRegistration();
+  byte waitForNetwork(unsigned long timeOut);
   uint8_t signalQuality();
   boolean selectSIMPhoneBook();
   char * readPhoneNumber(uint8_t position);
@@ -79,6 +81,7 @@ public:
   boolean storePhoneNumber(uint8_t position, char * phoneNumber, char * name);
   
   void GPRSWriteByte(char c);
+  byte SerialGSM::GPRSReadByte();
   bool isGPRSDataAvailable();
   
   void removeChar(char *str, char garbage);
