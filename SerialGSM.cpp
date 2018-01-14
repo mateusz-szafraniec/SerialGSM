@@ -1,4 +1,9 @@
+// SerialGSM version 2.0.0 alpha
+// by Mateusz Szafraniec
+//
+// based on:
 // SerialGSM version 1.1
+// https://github.com/meirm/SerialGSM
 // by Meir Michanie
 // meirm@riunx.com
 
@@ -7,12 +12,15 @@
 // http://www.developershome.com/sms/resultCodes2.asp
 #include <SerialGSM.h>
 
-SerialGSM::SerialGSM(byte rxpin,byte txpin, byte pwrkey, byte power):
+SerialGSM::SerialGSM(byte rxpin,byte txpin, byte pwrkey, byte power, long baud):
 SoftwareSerial(rxpin,txpin)
 {
  verbose=false;
  this->power=power;
  this->pwrkey=pwrkey;
+ this->begin(baud);
+ pinMode(pwrkey,OUTPUT);
+ pinMode(power,OUTPUT);
 }
 
 void SerialGSM::sendATCommand(char * command)

@@ -34,7 +34,7 @@
 
 class SerialGSM : public SoftwareSerial {
 public:
-  SerialGSM(byte rxpin,byte txpin, byte pwrkey, byte power);
+  SerialGSM(byte rxpin,byte txpin, byte pwrkey, byte power, long baud);
   char buffer[BUFFER_SIZE]; // buffer array for data recieve over serial port
   byte count;     // counter for buffer array
   void sendATCommand(char * command);
