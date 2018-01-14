@@ -46,7 +46,7 @@ public:
   byte Reset();
   byte dial(char * number);
   byte answer();
-  byte hungup();
+  byte hangup();
 
   //int ReadLine();
   //int ReceiveSMS();
@@ -69,7 +69,7 @@ public:
   byte readDataToBuffer();
   void printBufferContent();
   void printSerialContent();
-  byte confirmAtCommand(char *searchString, unsigned long timeOut);
+  byte confirmAtCommand(char* searchString, unsigned long timeOut);
   byte findInBuffer(char* text);
   bool checkNetworkRegistration();
   uint8_t signalQuality();

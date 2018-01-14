@@ -49,7 +49,7 @@ byte  SerialGSM::clipON(){
   return this->confirmAtCommand("\r\nOK", AT_TO);
 }
 
-byte SerialGSM::hungup(){
+byte SerialGSM::hangup(){
   this->sendATCommand("ATH");
   return this->confirmAtCommand("\r\nOK", CPBR_TO);
 }
@@ -384,7 +384,7 @@ void SerialGSM::printSerialContent()
   2       Buffer full, searchString not found
   3       Timeout reached before searchString found
 **************************************************************/
-byte SerialGSM::confirmAtCommand(char *searchString, unsigned long timeOut)
+byte SerialGSM::confirmAtCommand(char* searchString, unsigned long timeOut)
 {
   this->clearBufferArray();
   unsigned long tOut = millis();
