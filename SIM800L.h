@@ -4,3 +4,5 @@
   #define PWR_ON_DELAY2 1900L
   #define PWRON_MESSAGE "RDY"
   #define PWRDOWN_MESSAGE "POWER DOWN"
+  
+  #define RESET_COMMAND "AT+CFUN=1,1"

@@ -60,7 +60,7 @@ byte SerialGSM::DeleteAllSMS(){
 }
 
 byte SerialGSM::Reset(){
-  this->sendATCommand("AT+CFUN=1,1"); // Reset Modem
+  this->sendATCommand(RESET_COMMAND); // Reset Modem
   return this->confirmAtCommand("\r\nOK", AT_TO);
 }
 
@@ -184,7 +184,7 @@ void SerialGSM::switchGPRS_OFF_HW()
   digitalWrite(pwrkey, LOW);
   this->flush();
   digitalWrite(pwrkey, HIGH);
-  delay(PWR_OFF_DELAY);
+  delay(PWR_KEY_PRESS_DELAY);
   digitalWrite(pwrkey, LOW);
   this->confirmAtCommand(PWRDOWN_MESSAGE, CPOWD_TO);
   digitalWrite(power, LOW);
