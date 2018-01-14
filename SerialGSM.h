@@ -1,7 +1,7 @@
 #ifndef _SerialGSM_H
 #define _SerialGSM_H
 #include "Arduino.h"
-#include <SIM800L.h>
+#include <M590.h>
 #include <SoftwareSerial.h>
 
 #define BUFFER_SIZE 255
@@ -59,6 +59,9 @@ public:
   void switchGPRS_ON();
   void switchGPRS_OFF_SW();
   void switchGPRS_OFF_HW();
+  void switchM590_ON();
+  void switchM590_OFF_SW();
+  void switchM590_OFF_HW();
   boolean isGPRSReady();
   boolean isNetworkAvailable();
   byte sendSMS(char * number, char * message);

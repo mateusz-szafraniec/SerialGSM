@@ -136,6 +136,47 @@ void SerialGSM::Sender(char * var1){
 	sprintf(sendernumber,"%s",var1);
 }
 
+void SerialGSM::switchM590_ON()
+{
+  if (verbose) Serial.println(F("Switching M590 ON"));
+  delay(PWR_ON_DELAY);
+  delay(10);
+  digitalWrite(pwrkey, LOW);
+  delay(PWR_KEY_PRESS_DELAY);
+  digitalWrite(pwrkey, HIGH);
+  byte result = this->confirmAtCommand(PWRON_MESSAGE, PWR_ON_DELAY2);
+  byte attempt=0;
+  while (!this->isGPRSReady())
+  {
+    attempt++;
+    if (attempt>10) {
+      if (verbose) Serial.println(F("RESET"));
+	    digitalWrite(pwrkey, HIGH);
+      delay(10);
+      digitalWrite(pwrkey, LOW);
+      delay(PWR_KEY_PRESS_DELAY);
+      digitalWrite(pwrkey, HIGH);
+      byte result = this->confirmAtCommand(PWRON_MESSAGE, PWR_ON_DELAY2);
+      attempt=0;
+    }
+  }
+}
+
+void SerialGSM::switchM590_OFF_SW() 
+{
+  if (verbose) Serial.println(F("Switching M590 OFF"));
+  this->sendATCommand(POWER_DOWN_COMMAND);
+  this->confirmAtCommand("OK", PWR_OFF_DELAY);
+}
+
+void SerialGSM::switchM590_OFF_HW() 
+{
+  if (verbose) Serial.println(F("Switching M590 OFF HW"));
+  digitalWrite(pwrkey, LOW);
+  delay(PWR_KEY_PRESS_DELAY);
+  digitalWrite(pwrkey, HIGH);
+}
+
 void SerialGSM::switchGPRS_ON() 
 {
   if (digitalRead(power)) {
