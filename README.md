@@ -1,3 +1,6 @@
+## This fork is abandoned, 
+please use https://github.com/mateusz-szafraniec/GSM-GPRS-GPS-Shield instead.
+
 SerialSMS by Meir Michanie 
 meirm@riunx.com
 Released under GPL3
